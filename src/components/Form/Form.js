@@ -1,18 +1,20 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux'
+import contactActions from '../../redux/phonebook-actions';
 import styles from './form.module.css';
 import { v4 as uuidv4 } from 'uuid';
 
-export default function Form({ submit, option }) {
-    const [id] = useState(0);
+export default function Form({ option }) {
     const [name, setName] = useState('');
     const [number, setNumber] = useState('');
+    const dispatch = useDispatch();
 
     const inputId = uuidv4();
 
     const handleSubmit = evt => {
         evt.preventDefault();
 
-        submit({ id, name, number });
+        dispatch(contactActions.addContact({ name, number }));
 
         setName('');
         setNumber('');      
@@ -50,7 +52,7 @@ export default function Form({ submit, option }) {
                     value={name}
                     onChange={handleChange}
                     pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-                    title="The name can only consist of letters, apostrophes, dashes and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan etc."
+                    title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
                     required
                 />
             <label htmlFor={inputId} className={styles.formLabel}>Number</label>
@@ -63,13 +65,12 @@ export default function Form({ submit, option }) {
                     value={number}
                     onChange={handleChange}
                     pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-                    title="The phone number must be digits and can contain spaces, dashes and should start with +"
+                    title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
                     required
                 />
             
           <button type="submit" className={styles.formBtn}>Add contact</button>          
         </form>
         </>
-    );
-    
-}
+    );    
+};
